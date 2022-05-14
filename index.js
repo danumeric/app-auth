@@ -67,7 +67,7 @@ const start = async () => {
 start();
 
 
-httpServer.listen(3000);
+httpServer.listen(PORT);
 io.on('connection', (socket) => {
   try {
     console.log('a user connected');
