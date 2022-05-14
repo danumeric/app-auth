@@ -7,39 +7,47 @@ const mainRouter = require('./mainRouter')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
-const app = express()
 const appSocket = express()
 const { createServer } = require("http");
-const { Server } = require("socket.io");
 const { createCipheriv } = require('crypto')
-const httpServer = createServer(appSocket);
 const Messages = require('./models/Messages')
-
 let vaultIdSocketIo = {};
+const socketIO = require('socket.io');
 
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-    allowUpgrades: true,
-    transports: ['polling', 'websocket'],
-    pingTimeout: 9000,
-    pingInterval: 3000,
-    cookie: 'mycookie',
-    httpCompression: true,
-  },
 
-});
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: '*',
+//     allowUpgrades: true,
+//     transports: ['polling', 'websocket'],
+//     pingTimeout: 9000,
+//     pingInterval: 3000,
+//     cookie: 'mycookie',
+//     httpCompression: true,
+//   },
+
+// });
 
 
 const PORT = process.env.PORT || 5000;
 
 
+const app = express().use(cors()).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
 
-app.use(cors());
-app.use('/auth', mainRouter)
-app.use(express.json())
+const io = socketIO(app);
 
+
+
+
+const start = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL)
+  } catch (e) {
+    console.log(e);
+  }
+}
+start();
 io.use((socket, next) => {
   try {
     const token = socket.handshake.auth.token;
@@ -55,19 +63,7 @@ io.use((socket, next) => {
   }
 });
 
-
-const start = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URL)
-    app.listen(PORT, () => console.log(`server started at ${PORT}`));
-  } catch (e) {
-    console.log(e);
-  }
-}
-start();
-
-
-httpServer.listen(PORT);
+//httpServer.listen(3000);
 io.on('connection', (socket) => {
   try {
     console.log('a user connected');
