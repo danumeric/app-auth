@@ -30,6 +30,19 @@ class messagesController {
           }
         }
       );
+
+      await Messages.updateOne(
+        {
+          "ownerId": idInterlocator,
+        },
+        {
+          $push: {
+            messages: {
+              idInterlocator: ownerId
+            }
+          }
+        }
+      );
       const db = await Messages.findOne({ ownerId: req.userId });
       await res.json(db.messages);
 
