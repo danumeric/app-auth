@@ -30,14 +30,13 @@ const socketIO = require('socket.io');
 // });
 let corsOptions = {
   origin: '*',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-
+  credentials: true
 }
 
 const PORT = process.env.PORT || 5000;
 
 
-const app = express().use(cors()).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
+const app = express().use(cors(corsOptions)).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
 
 const io = socketIO(app);
 
