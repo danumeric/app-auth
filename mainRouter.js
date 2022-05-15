@@ -3,7 +3,11 @@ const bodyParser = require('body-parser')
 const router = new Router();
 const authContr = require('./controllers/authController')
 const messagesContr = require('./controllers/messagesController')
-
+const cors = require('cors')
+let corsOptions = {
+  origin: '*',
+  credentials: true
+}
 const jsonParser = bodyParser.json()
 const authMiddleware = require('./middlewares/authMiddleware')
 
@@ -18,7 +22,7 @@ router.post('/registration', [
 router.post('/login', [jsonParser], authContr.login)
 router.get('/users', jsonParser, authMiddleware, authContr.getUsers)
 router.get('/messages', jsonParser, authMiddleware, messagesContr.getMessages)
-router.post('/addConversation', jsonParser, authMiddleware, messagesContr.addConversation)
+router.post('/addConversation', cors(corsOptions), jsonParser, authMiddleware, messagesContr.addConversation)
 
 // controller.createTestMessage, 
 module.exports = router
