@@ -34,12 +34,15 @@ const PORT = process.env.PORT || 5000;
 
 
 const app = express().use(cors(
-  //   {
-  //   origin: '*',
-  //   methods: "GET,PUT,POST,DELETE",
-  //   credentials: true,            //access-control-allow-credentials:true
-  //   optionSuccessStatus: 200,
-  // }
+  {
+    origin: '*',
+    allowUpgrades: true,
+    transports: ['polling', 'websocket'],
+    pingTimeout: 9000,
+    pingInterval: 3000,
+    cookie: 'mycookie',
+    httpCompression: true,
+  }
 )).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
 
 const io = socketIO(app);

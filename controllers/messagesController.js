@@ -8,7 +8,7 @@ class messagesController {
   async getMessages(req, res) {
     try {
       const db = await Messages.findOne({ ownerId: req.userId });
-      // console.log(db.messages);//from authMiddleware
+      console.log(db);
       await res.json(db.messages);
     } catch (e) {
       console.log(e);
