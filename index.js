@@ -18,7 +18,7 @@ const socketIO = require('socket.io');
 
 // const io = new Server(httpServer, {
 //   cors: {
-//     origin: '*',
+//     
 //     allowUpgrades: true,
 //     transports: ['polling', 'websocket'],
 //     pingTimeout: 9000,
@@ -28,7 +28,11 @@ const socketIO = require('socket.io');
 //   },
 
 // });
+let corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 
+}
 
 const PORT = process.env.PORT || 5000;
 
