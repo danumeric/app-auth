@@ -32,7 +32,7 @@ class authController {
       }
       const hashPassword = bcrypt.hashSync(password, 3);
       const userRole = await Role.findOne({ value: 'USER' })
-      const user = new User({ username, password: hashPassword, firstName, secondName, sex, birthDate, country, selectedAvatar, })// roles: [userRole.value]
+      const user = new User({ username, password: hashPassword, firstName, secondName, sex, birthDate, country, selectedAvatar, roles: [userRole.value] })
       await user.save();
       const userInDb = await User.findOne({ username });
       const msgPattern = new Messages({ ownerId: userInDb._id.toHexString() })

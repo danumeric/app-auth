@@ -8,7 +8,7 @@ class messagesController {
   async getMessages(req, res) {
     try {
       const db = await Messages.findOne({ ownerId: req.userId });
-      console.log(db);
+      // console.log(db.messages);//from authMiddleware
       await res.json(db.messages);
     } catch (e) {
       console.log(e);
@@ -30,20 +30,6 @@ class messagesController {
           }
         }
       );
-      await Messages.updateOne(
-        {
-          "ownerId": idInterlocator,
-        },
-        {
-          $push: {
-            messages: {
-              idInterlocator: ownerId
-            }
-          }
-        }
-      );
-
-
       const db = await Messages.findOne({ ownerId: req.userId });
       await res.json(db.messages);
 

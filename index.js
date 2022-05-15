@@ -33,17 +33,7 @@ const socketIO = require('socket.io');
 const PORT = process.env.PORT || 5000;
 
 
-const app = express().use(cors(
-  {
-    origin: '*',
-    allowUpgrades: true,
-    transports: ['polling', 'websocket'],
-    pingTimeout: 9000,
-    pingInterval: 3000,
-    cookie: 'mycookie',
-    httpCompression: true,
-  }
-)).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
+const app = express().use(cors()).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
 
 const io = socketIO(app);
 
