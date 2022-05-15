@@ -35,6 +35,7 @@ const PORT = process.env.PORT || 5000;
 
 const app = express().use(cors({
   origin: '*',
+  methods: "GET,PUT,POST,DELETE",
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 })).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
