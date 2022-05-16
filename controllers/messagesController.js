@@ -33,12 +33,12 @@ class messagesController {
 
       await Messages.updateOne(
         {
-          "ownerId": idInterlocator,
+          ownerId: idInterlocator,
         },
         {
           $push: {
             messages: {
-              idInterlocator: ownerId
+              idInterlocator: req.userId
             }
           }
         }
