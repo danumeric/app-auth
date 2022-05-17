@@ -66,7 +66,7 @@ class authController {
     try {
       let users = await User.find();
 
-      for (let i = 0; i < users.length; i++) {
+      for (let i = 0; i < users.length; i++) {// current user on 0 place of array
         if (users[i]._id.toHexString() === req.userId) {
           let you = users[i];
           users.splice(i, 1);
