@@ -1,7 +1,6 @@
 const User = require('../models/User')
 const Role = require('../models/Role')
 const Messages = require('../models/Messages')
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator')
@@ -40,7 +39,7 @@ class authController {
       return res.json({ message: 'Successfully registred! You will be redirected to auth page' })
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: 'registration failed' })
+      return res.status(400).json({ message: 'registration failed', e: e })
     }
   }
 
@@ -60,7 +59,7 @@ class authController {
 
     } catch (e) {
       console.log(e);
-      res.status(400).json({ message: 'login failed' })
+      return res.status(400).json({ message: 'login failed', e: e })
     }
   }
 
@@ -68,7 +67,6 @@ class authController {
     try {
       let users = await User.find();
       // console.log(users[3]._id.toHexString());
-      // console.log(req.user.id);
 
       for (let i = 0; i < users.length; i++) {
         if (users[i]._id.toHexString() === req.userId) {
@@ -82,6 +80,7 @@ class authController {
       await res.json(users);
     } catch (e) {
       console.log(e);
+      return res.status(400).json({ message: 'getUsers failed', e: e })
     }
   }
 

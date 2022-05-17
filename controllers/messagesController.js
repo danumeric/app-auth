@@ -1,5 +1,5 @@
+
 const User = require('../models/User')
-const Role = require('../models/Role')
 const Messages = require('../models/Messages')
 
 
@@ -12,6 +12,7 @@ class messagesController {
       await res.json(db.messages);
     } catch (e) {
       console.log(e);
+      return res.status(400).json({ message: 'getMessages failed', e: e })
     }
   }
 
@@ -48,7 +49,7 @@ class messagesController {
 
     } catch (e) {
       console.log(e);
-      return res.status(400).json({ message: "Error addConversation", errors })
+      return res.status(400).json({ message: "Error addConversation", e: e })
     }
     // const interlocutor = await Messages.findOne({
     //   ownerId: req.userId,
