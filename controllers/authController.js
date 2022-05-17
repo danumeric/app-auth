@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator')
 const { secretKey } = require("../config");
 const { isRequired } = require('nodemon/lib/utils');
-//const cookieParser = require('cookie-parser');
 
 
 const generateAccessToken = (id, roles) => {
@@ -63,17 +62,15 @@ class authController {
     }
   }
 
-  async getUsers(req, res) {
+  async getUsers(req, res) {//send list of all users
     try {
       let users = await User.find();
-      // console.log(users[3]._id.toHexString());
 
       for (let i = 0; i < users.length; i++) {
         if (users[i]._id.toHexString() === req.userId) {
           let you = users[i];
           users.splice(i, 1);
           users.unshift(you);
-
           break;
         }
       }
@@ -87,9 +84,8 @@ class authController {
 
 
 
-  //async createTestMessage() {//! Структура БД сообщений
-  //  try {
-  //    const msg = new Messages({
+  //async createTestMessage() {//! structure of messageDB
+  //   {
   //      ownerId: '6258aa74e3c6df12081e67a6',
   //      messages: [{
   //        idInterlocator: '625c7c7610dc6336e2942333',
@@ -100,13 +96,7 @@ class authController {
   //          { fromOwner: false, timeStamp: '165075731185', message: 'fourrrrr (to me)' }
   //        ]
   //      }]
-  //    });
-  //    await msg.save()
-  //  }
-  //  catch (e) {
-  //    console.log(e);
-  //  }
-  //}
+  //    }
 
 }
 

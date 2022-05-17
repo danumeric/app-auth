@@ -11,7 +11,7 @@ let corsOptions = {
 const jsonParser = bodyParser.json()
 const authMiddleware = require('./middlewares/authMiddleware')
 
-const roleMiddleware = require('./middlewares/roleMiddleware')
+//const roleMiddleware = require./middlewares/_roleMiddlewarere')
 const { check } = require('express-validator')
 
 router.post('/registration', [
@@ -24,5 +24,4 @@ router.get('/users', jsonParser, authMiddleware, authContr.getUsers)
 router.get('/messages', jsonParser, authMiddleware, messagesContr.getMessages)
 router.post('/addConversation', cors(corsOptions), jsonParser, authMiddleware, messagesContr.addConversation)
 
-// controller.createTestMessage, 
 module.exports = router

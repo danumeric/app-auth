@@ -4,44 +4,23 @@ const { secretKey } = require('./config')
 const express = require('express')
 const mongoose = require('mongoose')
 const mainRouter = require('./mainRouter')
-const bodyParser = require('body-parser')
+//const bodyParser = require('body-parser')
 const cors = require('cors')
-const cookieParser = require('cookie-parser');
-const appSocket = express()
-const { createServer } = require("http");
-const { createCipheriv } = require('crypto')
+//const cookieParser = require('cookie-parser');
+//const appSocket = express()
 const Messages = require('./models/Messages')
 let vaultIdSocketIo = {};
 const socketIO = require('socket.io');
 
-
-
-// const io = new Server(httpServer, {
-//   cors: {
-//     
-//     allowUpgrades: true,
-//     transports: ['polling', 'websocket'],
-//     pingTimeout: 9000,
-//     pingInterval: 3000,
-//     cookie: 'mycookie',
-//     httpCompression: true,
-//   },
-
-// });
-let corsOptions = {
+const corsOptions = {
   origin: '*',
   credentials: true
 }
-
 const PORT = process.env.PORT || 5000;
-
 
 const app = express().use(cors(corsOptions)).use('/auth', mainRouter).use(express.json()).listen(PORT, () => console.log(`server started at ${PORT}`));
 
 const io = socketIO(app);
-
-
-
 
 const start = async () => {
   try {
@@ -49,8 +28,10 @@ const start = async () => {
   } catch (e) {
     console.log(e);
   }
-}
+};
+
 start();
+
 io.use((socket, next) => {
   try {
     const token = socket.handshake.auth.token;
@@ -66,30 +47,29 @@ io.use((socket, next) => {
   }
 });
 
-//httpServer.listen(3000);
 io.on('connection', (socket) => {
   try {
     console.log('a user connected');
 
-  } catch (e) { console.log(e); }
+  } catch (e) {
+    console.log(e);
+  }
 
-  socket.on('disconnect', () => { //TODO удалять из vaultIdSocketIo неактуальные socketioID
+  socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 
-
-  socket.on('messageToServer', async (inp, callback) => {
+  socket.on('messageToServer', async (inp, callback) => { // from client to server
     try {
       const decodedData = jwt.verify(inp.token, secretKey);
       let msgToClient = inp;
       msgToClient.senderID = decodedData.id
       delete msgToClient.token;
-      if (vaultIdSocketIo[inp.target]) {//отправка юзеру, если есть в таблице. вместо токена отпр ID отправителя
+      if (vaultIdSocketIo[inp.target]) {//if client2 online, send via socketIO immediatly
         io.to(vaultIdSocketIo[msgToClient.target]).emit("messageFromServer", msgToClient);
-        //io.emit("messageFromServer", inp);
       }
 
-      await Messages.updateOne(//запись дб отправителя
+      await Messages.updateOne(//add to sender messages DB
 
         {
           "ownerId": decodedData.id,
@@ -108,7 +88,7 @@ io.on('connection', (socket) => {
         }
       );
 
-      await Messages.updateOne(//запись дб получателя
+      await Messages.updateOne(//add to recipient messages DB
 
         {
           "ownerId": inp.target,
@@ -130,7 +110,7 @@ io.on('connection', (socket) => {
       console.log(e);
     }
 
-    callback({
+    callback({//for client that message is deliveried to server and successfully added to mongoDB
       idDelivMsg: inp.idMongo
     });
 
