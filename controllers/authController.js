@@ -46,7 +46,7 @@ class authController {
     try {
       const { username, password } = req.body
       const user = await User.findOne({ username })
-      res.type = "application/json"
+      res.setHeader('content-type', 'application/json');
       if (!user) {
         return res.status(401).json({ err: `User "${username}" not found` })
       }
