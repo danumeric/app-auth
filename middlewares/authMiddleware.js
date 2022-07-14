@@ -10,7 +10,7 @@ module.exports = function (req, res, next) {
     const token = req.headers.authorization;
     //const token = req.headers.authorization:.split(' ')[1];
     if (!token) {
-      return res.status(403).json({ message: 'no token' })
+      return res.status(403).json({ failedAuth: true, message: 'no token' })
     }
     const decodedData = jwt.verify(token, secretKey);
     req.userId = decodedData.id  //для дальнейшего использования по цепочке 

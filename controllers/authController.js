@@ -47,10 +47,12 @@ class authController {
       const { username, password } = req.body
       const user = await User.findOne({ username })
       res.setHeader('content-type', 'application/json');
+
       if (!user) {
         return res.status(401).json({ err: `User "${username}" not found` })
       }
       const isValidPassword = bcrypt.compareSync(password, user.password);
+
       if (!isValidPassword) {
         return res.status(401).json({ err: `Password incorrect` })
       }
@@ -83,24 +85,6 @@ class authController {
       return res.status(400).json({ message: 'getUsers failed', e: e })
     }
   }
-
-
-
-
-  //async createTestMessage() {//! structure of messageDB
-  //   {
-  //      ownerId: '6258aa74e3c6df12081e67a6',
-  //      messages: [{
-  //        idInterlocator: '625c7c7610dc6336e2942333',
-  //        conversations: [
-  //          { fromOwner: true, timeStamp: '165075531185', message: 'first (from me)' },
-  //          { fromOwner: false, timeStamp: '165075542185', message: 'SECOND (to me)' },
-  //          { fromOwner: true, timeStamp: '165075552185', message: 'third (from me)' },
-  //          { fromOwner: false, timeStamp: '165075731185', message: 'fourrrrr (to me)' }
-  //        ]
-  //      }]
-  //    }
-
 }
 
 module.exports = new authController()
